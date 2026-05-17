@@ -1,33 +1,38 @@
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 import { Btn } from './UI';
 
 const Navbar = () => {
   const { user, logout } = useAuth();
+  const { theme, toggleTheme } = useTheme();
+  const initials = user?.name?.split(' ').map((part) => part[0]).join('').slice(0, 2).toUpperCase() || 'KB';
 
   return (
-    <nav style={{
-      position: 'sticky', top: 0, zIndex: 100,
-      background: 'rgba(10,10,15,.85)', backdropFilter: 'blur(16px)',
-      borderBottom: '1px solid var(--border)',
-      padding: '14px 28px', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-    }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-        <div style={{ width: 28, height: 28, background: 'var(--accent)', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14 }}>▦</div>
-        <span style={{ fontFamily: 'var(--font-head)', fontWeight: 800, fontSize: 18, letterSpacing: '-.02em' }}>
-          Kan<span style={{ color: 'var(--accent)' }}>ban</span>
-        </span>
-      </div>
-
-      {user && (
-        <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-          <div style={{ textAlign: 'right' }}>
-            <div style={{ fontFamily: 'var(--font-head)', fontWeight: 600, fontSize: 13 }}>{user.name}</div>
-            <div style={{ color: 'var(--muted)', fontSize: 11 }}>{user.email}</div>
+    <header className="topbar">
+      <div className="topbar-inner page-shell">
+        <div className="brand">
+          <div className="brand-mark">▦</div>
+          <div className="brand-title">
+            <strong>Kanban</strong>
+            <span>Modern task workspace</span>
           </div>
-          <Btn variant="ghost" size="sm" onClick={logout}>Sign Out</Btn>
         </div>
-      )}
-    </nav>
+
+        <div className="nav-actions">
+          <button type="button" className="action-button" onClick={toggleTheme} aria-label="Toggle theme">
+            {theme === 'dark' ? '☀️' : '🌙'}
+          </button>
+          <div className="profile-pill">
+            <div className="profile-pill-avatar">{initials}</div>
+            <div className="profile-pill-text">
+              <strong>{user?.name}</strong>
+              <span>{user?.email}</span>
+            </div>
+          </div>
+          <Btn variant="ghost" size="sm" onClick={logout}>Sign out</Btn>
+        </div>
+      </div>
+    </header>
   );
 };
 
